@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NaviAble AI – Read &amp; Listen</title>
+
+  <!-- Atkinson Hyperlegible was designed for low-vision readers; Noto Sans Devanagari covers Hindi -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="top">
+    <h1>NaviAble AI <span>Read &amp; Listen</span></h1>
+    <p>Photograph any sign, label or page. We read it out loud in English or Hindi.</p>
+  </header>
+
+  <!-- Error / info banner (filled by script.js) -->
+  <div id="banner" class="banner" role="alert" hidden></div>
+
+  <main class="grid">
+
+    <!-- LEFT: image upload + OCR -->
+    <section class="panel" aria-labelledby="h-image">
+      <h2 id="h-image">Image</h2>
+
+      <label id="dropzone" class="dropzone" tabindex="0">
+        <input id="fileInput" type="file" accept="image/*" hidden>
+        <img id="preview" alt="Preview of the selected image" hidden>
+        <div id="dropHint" class="drop-hint">
+          <strong>Drop an image here</strong>
+          <span>or click to choose a file (JPG, PNG, WebP up to 10 MB)</span>
+        </div>
+      </label>
+
+      <div class="row">
+        <label for="ocrLang">Text language in image</label>
+        <select id="ocrLang">
+          <option value="eng">English</option>
+          <option value="hin">Hindi</option>
+          <option value="eng+hin">English + Hindi</option>
+        </select>
+      </div>
+
+      <label class="check"><input type="checkbox" id="enhance" checked> Enhance image before reading (recommended)</label>
+
+      <button id="extractBtn" class="btn primary" disabled>Extract text</button>
+
+      <div id="progressWrap" class="progress-wrap" hidden>
+        <div class="progress-label"><span id="progressText">Starting…</span><span id="progressPct">0%</span></div>
+        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar">
+          <div id="barFill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: editable text + text-to-speech -->
+    <section class="panel" aria-labelledby="h-text">
+      <h2 id="h-text">Text</h2>
+      <textarea id="text" rows="9" placeholder="Extracted text appears here. You can also type or paste text and edit it before listening."></textarea>
+      <div class="row end">
+        <button id="copyBtn" class="btn ghost small">Copy</button>
+        <button id="clearBtn" class="btn ghost small">Clear</button>
+      </div>
+
+      <h2 id="h-listen">Listen</h2>
+      <div class="controls" role="group" aria-labelledby="h-listen">
+        <button id="readBtn" class="btn primary">Read aloud</button>
+        <button id="pauseBtn" class="btn" disabled>Pause</button>
+        <button id="resumeBtn" class="btn" disabled>Resume</button>
+        <button id="stopBtn" class="btn danger" disabled>Stop</button>
+      </div>
+
+      <div class="fields">
+        <div>
+          <label for="speechLang">Speak in</label>
+          <select id="speechLang">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+        <div>
+          <label for="voiceSelect">Voice</label>
+          <select id="voiceSelect"></select>
+        </div>
+        <div class="wide">
+          <label for="rate">Speed <output id="rateOut">1.0×</output></label>
+          <input id="rate" type="range" min="0.5" max="2" step="0.1" value="1">
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM: voice commands -->
+    <section class="panel voice" aria-labelledby="h-voice">
+      <button id="micBtn" class="mic" aria-pressed="false" aria-label="Start voice commands">
+        <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg>
+      </button>
+      <div class="voice-body">
+        <h2 id="h-voice">Voice commands</h2>
+        <p id="micStatus" class="status" aria-live="polite">Microphone is off.</p>
+        <div class="row">
+          <label for="micLang">Listening language</label>
+          <select id="micLang">
+            <option value="en-IN">English</option>
+            <option value="hi-IN">Hindi</option>
+          </select>
+        </div>
+        <ul class="chips">
+          <li>Read · पढ़ो</li>
+          <li>Pause · ठहरो</li>
+          <li>Resume · जारी</li>
+          <li>Stop · रुको</li>
+          <li>English · अंग्रेज़ी</li>
+          <li>Hindi · हिंदी</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>Runs fully in your browser. Your images are never uploaded to a server.</footer>
+
+  <!-- Tesseract.js v5 (OCR) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
